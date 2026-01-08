@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/dangelojan/BSA/CubiculoDigitalInversoFrontend/src/components/MockPage.tsx"],"sourcesContent":["export default function MockPage({ title }: { title: string }) {\n    return (\n        <div className=\"p-10\">\n            <h1 className=\"text-3xl font-bold mb-4\">{title}</h1>\n            <p>Component under construction.</p>\n        </div>\n    );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS,SAAS,EAAE,KAAK,EAAqB;IACzD,qBACI,8OAAC;QAAI,WAAU;;0BACX,8OAAC;gBAAG,WAAU;0BAA2B;;;;;;0BACzC,8OAAC;0BAAE;;;;;;;;;;;;AAGf"}},
+    {"offset": {"line": 50, "column": 0}, "map": {"version":3,"sources":["file:///home/dangelojan/BSA/CubiculoDigitalInversoFrontend/src/app/setup/page.tsx"],"sourcesContent":["import MockPage from \"@/components/MockPage\";\n\nexport default function Page() {\n    return <MockPage title=\"Configuración de Entrevista\" />;\n}\n"],"names":[],"mappings":";;;;;AAAA;;;AAEe,SAAS;IACpB,qBAAO,8OAAC,yIAAQ;QAAC,OAAM;;;;;;AAC3B"}}]
+}

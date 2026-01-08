@@ -1,0 +1,3 @@
+module.exports=[50645,a=>{a.n(a.i(27572))},43619,a=>{a.n(a.i(79962))},13718,a=>{a.n(a.i(85523))},18198,a=>{a.n(a.i(45518))},62212,a=>{a.n(a.i(66114))},78694,a=>{"use strict";var b=a.i(7997);function c({title:a}){return(0,b.jsxs)("div",{className:"p-10",children:[(0,b.jsx)("h1",{className:"text-3xl font-bold mb-4",children:a}),(0,b.jsx)("p",{children:"Component under construction."})]})}a.s(["default",()=>c])},35032,a=>{"use strict";var b=a.i(7997),c=a.i(78694);function d(){return(0,b.jsx)(c.default,{title:"Exportación"})}a.s(["default",()=>d])}];
+
+//# sourceMappingURL=_a12460b8._.js.map

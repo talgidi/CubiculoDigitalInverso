@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/audit/page": "/audit",
+  "/contact/page": "/contact",
+  "/dashboard/page": "/dashboard",
+  "/editor/page": "/editor",
+  "/export/page": "/export",
+  "/generate/page": "/generate",
+  "/guide/page": "/guide",
+  "/interview/page": "/interview",
+  "/library/page": "/library",
+  "/page": "/",
+  "/setup/page": "/setup"
+}

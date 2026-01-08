@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/audit/page": "app/audit/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/editor/page": "app/editor/page.js",
+  "/export/page": "app/export/page.js",
+  "/generate/page": "app/generate/page.js",
+  "/guide/page": "app/guide/page.js",
+  "/interview/page": "app/interview/page.js",
+  "/library/page": "app/library/page.js",
+  "/page": "app/page.js",
+  "/setup/page": "app/setup/page.js"
+}
