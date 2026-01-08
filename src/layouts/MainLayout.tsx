@@ -1,8 +1,14 @@
-import { Outlet, Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+"use client";
 
-const MainLayout = () => {
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { useState, ReactNode } from 'react';
+
+interface MainLayoutProps {
+    children: ReactNode;
+}
+
+const MainLayout = ({ children }: MainLayoutProps) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleMobileMenu = () => {
@@ -25,10 +31,10 @@ const MainLayout = () => {
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex flex-1 justify-end gap-8">
                         <div className="flex items-center gap-9">
-                            <Link to="/" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Inicio</Link>
-                            <Link to="/dashboard" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Panel</Link>
-                            <Link to="/library" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Biblioteca</Link>
-                            <Link to="/contact" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Contacto</Link>
+                            <Link href="/" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Inicio</Link>
+                            <Link href="/dashboard" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Panel</Link>
+                            <Link href="/library" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Biblioteca</Link>
+                            <Link href="/contact" className="text-[#111418] dark:text-white text-sm font-medium leading-normal hover:text-primary">Contacto</Link>
                         </div>
                         <div className="flex gap-2">
                             <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#1980e6] text-white text-sm font-bold leading-normal tracking-[0.015em]">
@@ -49,15 +55,15 @@ const MainLayout = () => {
                 {/* Mobile Navigation */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden fixed inset-0 top-[65px] z-50 bg-white dark:bg-[#101622] p-4 flex flex-col gap-4">
-                        <Link to="/" className="text-lg font-medium" onClick={toggleMobileMenu}>Inicio</Link>
-                        <Link to="/dashboard" className="text-lg font-medium" onClick={toggleMobileMenu}>Panel</Link>
-                        <Link to="/library" className="text-lg font-medium" onClick={toggleMobileMenu}>Biblioteca</Link>
-                        <Link to="/contact" className="text-lg font-medium" onClick={toggleMobileMenu}>Contacto</Link>
+                        <Link href="/" className="text-lg font-medium" onClick={toggleMobileMenu}>Inicio</Link>
+                        <Link href="/dashboard" className="text-lg font-medium" onClick={toggleMobileMenu}>Panel</Link>
+                        <Link href="/library" className="text-lg font-medium" onClick={toggleMobileMenu}>Biblioteca</Link>
+                        <Link href="/contact" className="text-lg font-medium" onClick={toggleMobileMenu}>Contacto</Link>
                     </div>
                 )}
 
                 <main className="flex-1 overflow-y-auto">
-                    <Outlet />
+                    {children}
                 </main>
 
                 <footer className="w-full border-t border-[#e5e7eb] dark:border-[#232f48] bg-white dark:bg-[#101622] py-10 px-6">

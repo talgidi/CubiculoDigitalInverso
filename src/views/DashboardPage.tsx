@@ -1,5 +1,5 @@
 import { Play, Plus, Box, Briefcase, Users, DollarSign, Terminal, Activity } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const DashboardPage = () => {
     return (
@@ -17,7 +17,7 @@ const DashboardPage = () => {
                                 <Activity className="size-4" />
                                 <span>Reporte General</span>
                             </button>
-                            <Link to="/setup" className="flex items-center gap-2 rounded-lg bg-[#1980e6] px-4 py-2 text-sm font-bold text-white shadow-lg shadow-[#1980e6]/20 hover:bg-[#1980e6]/90">
+                            <Link href="/setup" className="flex items-center gap-2 rounded-lg bg-[#1980e6] px-4 py-2 text-sm font-bold text-white shadow-lg shadow-[#1980e6]/20 hover:bg-[#1980e6]/90">
                                 <Plus className="size-4" />
                                 <span>Nueva Entrevista</span>
                             </Link>
@@ -82,7 +82,7 @@ const DashboardPage = () => {
                                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden mb-5">
                                     <div className="h-full bg-[#1980e6] rounded-full w-[75%]"></div>
                                 </div>
-                                <Link to="/interview" className="w-full py-2.5 rounded-lg bg-[#1980e6] text-white hover:bg-blue-600 text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20">
+                                <Link href="/interview" className="w-full py-2.5 rounded-lg bg-[#1980e6] text-white hover:bg-blue-600 text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20">
                                     <Play className="size-4" />
                                     Continuar Entrevista
                                 </Link>
@@ -107,7 +107,7 @@ const DashboardPage = () => {
                                 <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden mb-5">
                                     <div className="h-full bg-[#1980e6] rounded-full w-0"></div>
                                 </div>
-                                <Link to="/interview" className="w-full py-2.5 rounded-lg border border-dashed border-gray-300 dark:border-[#324467] text-[#1980e6] hover:bg-[#1980e6]/5 hover:border-[#1980e6] hover:border-solid text-sm font-bold transition-all flex items-center justify-center gap-2">
+                                <Link href="/interview" className="w-full py-2.5 rounded-lg border border-dashed border-gray-300 dark:border-[#324467] text-[#1980e6] hover:bg-[#1980e6]/5 hover:border-[#1980e6] hover:border-solid text-sm font-bold transition-all flex items-center justify-center gap-2">
                                     <Plus className="size-4" />
                                     Iniciar Entrevista
                                 </Link>
