@@ -1,5 +1,5 @@
 import { ArrowRight, CheckCircle, MessageSquare, Building2, Database } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const LandingPage = () => {
     return (
@@ -19,7 +19,7 @@ const LandingPage = () => {
                                 </h2>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link to="/setup" className="flex h-12 min-w-[160px] cursor-pointer items-center justify-center rounded-lg bg-[#1980e6] px-6 text-base font-bold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-600 hover:-translate-y-0.5 transition-all duration-200">
+                                <Link href="/setup" className="flex h-12 min-w-[160px] cursor-pointer items-center justify-center rounded-lg bg-[#1980e6] px-6 text-base font-bold text-white shadow-lg shadow-blue-500/25 hover:bg-blue-600 hover:-translate-y-0.5 transition-all duration-200">
                                     <span className="truncate">Iniciar Entrevista</span>
                                     <ArrowRight className="ml-2 size-5" />
                                 </Link>
