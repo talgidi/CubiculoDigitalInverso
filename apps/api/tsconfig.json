@@ -1,0 +1,14 @@
+{
+    "extends": "@repo/config/tsconfig.json",
+    "compilerOptions": {
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "outDir": "dist",
+        "noEmit": false,
+        "allowImportingTsExtensions": false
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

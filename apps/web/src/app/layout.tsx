@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MainLayout from "@/layouts/MainLayout";
+import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
 export const metadata: Metadata = {
     title: "Cubículo Digital Inverso",
@@ -15,7 +16,9 @@ export default function RootLayout({
     return (
         <html lang="es">
             <body>
-                <MainLayout>{children}</MainLayout>
+                <ApolloWrapper>
+                    <MainLayout>{children}</MainLayout>
+                </ApolloWrapper>
             </body>
         </html>
     );
