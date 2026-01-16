@@ -36,12 +36,12 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100">
-            <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-                <h1 className="mb-6 text-center text-2xl font-bold">Login</h1>
+        <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-[#0b1220]">
+            <div className="w-full max-w-md rounded-lg bg-white dark:bg-[#101622] p-8 shadow-md">
+                <h1 className="mb-6 text-center text-2xl font-bold text-gray-900 dark:text-white">Login</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
                         <input
                             type="email"
                             value={email}
@@ -51,7 +51,7 @@ export default function LoginPage() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                         <input
                             type="password"
                             value={password}
