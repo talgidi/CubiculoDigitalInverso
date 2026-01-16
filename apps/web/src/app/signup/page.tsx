@@ -45,7 +45,7 @@ export default function SignupPage() {
         <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-[#0b1220]">
             <div className="w-full max-w-md rounded-lg bg-white dark:bg-[#101622] p-8 shadow-md">
                 <h1 className="mb-6 text-center text-2xl font-bold text-gray-900 dark:text-white">
-                    Crear cuenta
+                    Sign Up
                 </h1>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,7 +99,7 @@ export default function SignupPage() {
                         disabled={loading}
                         className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:bg-indigo-400"
                     >
-                        {loading ? "Creando cuenta..." : "Registrarse"}
+                        {loading ? "Creando cuenta..." : "Registration"}
                     </button>
                 </form>
             </div>
