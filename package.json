@@ -7,6 +7,9 @@
         "lint": "turbo run lint",
         "format": "prettier --write \"**/*.{ts,tsx,md}\""
     },
+    "prisma": {
+        "schema": "packages/db/prisma/schema.prisma"
+    },
     "devDependencies": {
         "pnpm": "^10.28.0",
         "prettier": "^3.0.0",
