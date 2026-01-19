@@ -1,32 +1,44 @@
 FROM node:18-alpine AS base
-
-FROM base AS builder
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
-# Set working directory
 WORKDIR /app
-# Enable pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-# Copy entire monorepo
+
+# Required for Prisma on Alpine
+RUN apk add --no-cache libc6-compat
+
+# Enable Corepack + fixed PNPM version
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+
+
+# =========================
+# Builder
+# =========================
+FROM base AS builder
+
+# Copy monorepo (context = root)
 COPY . .
-# Install dependencies
-RUN pnpm install
-# Generate prisma client
+
+# Install deps
+RUN pnpm install --frozen-lockfile
+
+# Generate Prisma Client
 RUN pnpm --filter @repo/db exec prisma generate
-# Build api
+
+# Build API only
 RUN pnpm --filter @repo/api build
 
-FROM base AS runner
-WORKDIR /app
 
-# Don't run as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+# =========================
+# Runner
+# =========================
+FROM base AS runner
+
+# Non-root user
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nodejs
 USER nodejs
 
+# Copy only what runtime needs
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 4000
