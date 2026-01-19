@@ -15,7 +15,7 @@
         "prettier": "^3.0.0",
         "turbo": "^2.0.0"
     },
-    "packageManager": "pnpm@8.15.0",
+    "packageManager": "pnpm@10.28.1",
     "engines": {
         "node": ">=18"
     }
