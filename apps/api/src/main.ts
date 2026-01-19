@@ -3,7 +3,7 @@ import { createServer } from 'node:http'
 import { prisma } from '@repo/db'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { redis } from "./redis";
+import { redis } from "./redis.js";
 
 
 const APP_SECRET = process.env.APP_SECRET || 'appsecret321'

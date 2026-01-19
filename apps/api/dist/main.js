@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { prisma } from '@repo/db';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { redis } from "./redis.js";
 const APP_SECRET = process.env.APP_SECRET || 'appsecret321';
 // Helper to get userId from context
 function getUserId(context) {
@@ -38,9 +39,26 @@ const typeDefs = /* GraphQL */ `
 `;
 const resolvers = {
     Query: {
-        me: (_parent, _args, context) => {
+        me: async (_parent, _args, context) => {
             const userId = getUserId(context);
-            return prisma.user.findUnique({ where: { id: userId } });
+            const cacheKey = `user:${userId}`;
+            // 1. Intentar obtener desde Redis
+            const cachedUser = await redis.get(cacheKey);
+            if (cachedUser) {
+                return JSON.parse(cachedUser);
+            }
+            // 2. Obtener desde la base de datos
+            const user = await prisma.user.findUnique({
+                where: { id: userId },
+            });
+            if (!user) {
+                return null;
+            }
+            // 3. Guardar en Redis (TTL 60s)
+            await redis.set(cacheKey, JSON.stringify(user), {
+                EX: 60,
+            });
+            return user;
         },
         users: () => prisma.user.findMany(),
     },
@@ -73,6 +91,13 @@ const schema = createSchema({
 });
 const yoga = createYoga({ schema });
 const server = createServer(yoga);
-server.listen(4000, () => {
-    console.info('Server is running on http://localhost:4000/graphql');
+async function startServer() {
+    await redis.connect();
+    server.listen(4000, () => {
+        console.info("Server is running on http://localhost:4000/graphql");
+    });
+}
+startServer().catch((err) => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
 });
