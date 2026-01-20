@@ -1,10 +1,9 @@
-import * as Yoga from 'graphql-yoga';
+import { createYoga, createSchema } from 'graphql-yoga';
 import { createServer } from 'node:http';
 import { prisma } from '@repo/db';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { redis } from "./redis";
-const { createYoga, createSchema } = Yoga;
 const port = process.env.PORT || 4000;
 const APP_SECRET = process.env.APP_SECRET || 'appsecret321';
 // Helper to get userId from context
