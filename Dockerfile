@@ -13,6 +13,9 @@ COPY . .
 # Install deps (workspace-aware)
 RUN pnpm install --frozen-lockfile
 
+# Build DB first
+RUN pnpm --filter @repo/db build
+
 # Generate Prisma client
 RUN pnpm --filter @repo/db exec prisma generate
 
