@@ -25,6 +25,9 @@ RUN pnpm --filter @repo/api build
 FROM base AS runner
 WORKDIR /app
 
+# 🔑 Corepack DEBE activarse como root
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+
 # Non-root user
 RUN addgroup -g 1001 -S nodejs \
     && adduser -S nodejs -u 1001
