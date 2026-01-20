@@ -1,46 +1,37 @@
 FROM node:18-alpine AS base
-WORKDIR /app
-
-# Required for Prisma on Alpine
 RUN apk add --no-cache libc6-compat
 
-# Enable Corepack + fixed PNPM version
+FROM base AS builder
+WORKDIR /app
+
+# Enable pnpm
 RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 
-
-# =========================
-# Builder
-# =========================
-FROM base AS builder
-
-# Copy monorepo (context = root)
+# Copy monorepo
 COPY . .
 
-# Install deps
+# Install deps (workspace-aware)
 RUN pnpm install --frozen-lockfile
 
-# Generate Prisma Client
+# Generate Prisma client
 RUN pnpm --filter @repo/db exec prisma generate
 
-# Build API only
+# Build API
 RUN pnpm --filter @repo/api build
 
-
-# =========================
-# Runner
-# =========================
 FROM base AS runner
+WORKDIR /app
 
 # Non-root user
-RUN addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nodejs
+RUN addgroup -g 1001 -S nodejs \
+    && adduser -S nodejs -u 1001
 USER nodejs
 
-# Copy only what runtime needs
+# Copy only runtime artifacts
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 4000
-
 CMD ["node", "dist/main.js"]
