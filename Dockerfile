@@ -26,7 +26,7 @@ FROM base AS runner
 WORKDIR /app
 
 # 🔑 Corepack DEBE activarse como root
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+# RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 
 # Copy only runtime artifacts
 
