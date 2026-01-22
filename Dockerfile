@@ -35,7 +35,9 @@ USER nodejs
 # copiar SOLO lo necesario para runtime
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+
+RUN pnpm install --prod --frozen-lockfile
 
 EXPOSE 4000
 CMD ["node", "dist/main.js"]
