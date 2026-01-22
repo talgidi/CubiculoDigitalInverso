@@ -7,7 +7,13 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 
+
 COPY . .
+
+# Configurar pnpm para "hoist" (levantar) las dependencias
+# Esto evita problemas con symlinks en el runner stage
+RUN echo "node-linker=hoisted" > .npmrc
+
 
 RUN pnpm install --frozen-lockfile
 
