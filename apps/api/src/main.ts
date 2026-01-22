@@ -48,10 +48,16 @@ const resolvers = {
             const userId = getUserId(context);
             const cacheKey = `user:${userId}`;
 
-            // 1. Intentar obtener desde Redis
-            const cachedUser = await redis.get(cacheKey);
-            if (cachedUser) {
-                return JSON.parse(cachedUser);
+            // 1. Intentar obtener desde Redis (si está conectado)
+            if (redis.isOpen) {
+                try {
+                    const cachedUser = await redis.get(cacheKey);
+                    if (cachedUser) {
+                        return JSON.parse(cachedUser);
+                    }
+                } catch (e) {
+                    console.error("Redis get error:", e);
+                }
             }
 
             // 2. Obtener desde la base de datos
@@ -63,10 +69,16 @@ const resolvers = {
                 return null;
             }
 
-            // 3. Guardar en Redis (TTL 60s)
-            await redis.set(cacheKey, JSON.stringify(user), {
-                EX: 60,
-            });
+            // 3. Guardar en Redis (TTL 60s) si está conectado
+            if (redis.isOpen) {
+                try {
+                    await redis.set(cacheKey, JSON.stringify(user), {
+                        EX: 60,
+                    });
+                } catch (e) {
+                    console.error("Redis set error:", e);
+                }
+            }
 
             return user;
         },
@@ -105,10 +117,27 @@ const yoga = createYoga({ schema })
 const server = createServer(yoga)
 
 async function startServer() {
-    await redis.connect();
+    try {
+        // Intentar conectar a Redis sin bloquear el inicio del servidor HTTP si falla
+        // Si no hay REDIS_URL, logueamos una advertencia
+        if (!process.env.REDIS_URL) {
+            console.warn("⚠️  WARNING: REDIS_URL not set. Redis client will try default (localhost:6379) which may fail in Docker.");
+        }
 
-    server.listen(port, () => {
-        console.info(`Server is running on http://localhost:${port}/graphql`);
+        // Conectar a Redis en segundo plano (no await bloqueante crítico, o manejar el error)
+        // Preferimos await para saber si conectó, pero con timeout o catch para no matar el deploy
+        redis.connect().then(() => {
+            console.log("✅ Redis connected successfully");
+        }).catch((err) => {
+            console.error("❌ Redis connection failed (running without cache):", err.message);
+        });
+
+    } catch (error) {
+        console.error("Error setting up Redis:", error);
+    }
+
+    server.listen(port, '0.0.0.0', () => {
+        console.info(`Server is running on http://0.0.0.0:${port}/graphql`);
     });
 }
 
