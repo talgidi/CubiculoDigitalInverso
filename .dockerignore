@@ -1,0 +1,9 @@
+node_modules
+.git
+.turbo
+dist
+.env
+.DS_Store
+coverage
+apps/*/dist
+packages/*/dist
