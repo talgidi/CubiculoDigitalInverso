@@ -32,10 +32,7 @@ WORKDIR /app
 
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-
-# 🔑 AQUÍ ESTÁ LA CLAVE
-#RUN pnpm install --prod
+COPY --from=builder /app/apps/api/node_modules ./node_modules
 
 # Non-root user
 RUN addgroup -g 1001 -S nodejs \
