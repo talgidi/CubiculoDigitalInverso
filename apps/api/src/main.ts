@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { redis } from "./redis.js";
 
-const port = process.env.PORT || 4000;
+const port = Number(process.env.PORT) || 4000;
 const APP_SECRET = process.env.APP_SECRET || 'appsecret321'
 
 // Helper to get userId from context
