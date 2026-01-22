@@ -113,8 +113,17 @@ const schema = createSchema({
     resolvers,
 })
 
-const yoga = createYoga({ schema })
-const server = createServer(yoga)
+const yoga = createYoga({ schema });
+
+const server = createServer((req, res) => {
+    if (req.url === '/health') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('ok');
+        return;
+    }
+
+    yoga.handleNodeRequestAndResponse(req, res);
+});
 
 async function startServer() {
     try {
