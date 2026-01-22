@@ -105,7 +105,14 @@ const schema = createSchema({
     resolvers,
 });
 const yoga = createYoga({ schema });
-const server = createServer(yoga);
+const server = createServer((req, res) => {
+    if (req.url === '/health') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('ok');
+        return;
+    }
+    yoga.handleNodeRequestAndResponse(req, res);
+});
 async function startServer() {
     try {
         // Intentar conectar a Redis sin bloquear el inicio del servidor HTTP si falla
