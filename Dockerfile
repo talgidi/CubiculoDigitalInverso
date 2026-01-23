@@ -1,46 +1,45 @@
 FROM node:18-alpine AS base
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache python3 make g++
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# ======================
-# BUILDER
-# ======================
+# 1. Prune: Scope to @repo/api and its deps
+FROM base AS pruner
+WORKDIR /app
+COPY . .
+RUN npx turbo prune --scope=@repo/api --docker
+
+# 2. Builder: Install deps and build
 FROM base AS builder
 WORKDIR /app
 
-# pnpm estable
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+# Copy locked configuration
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
-# copiar monorepo completo
-COPY . .
-
-# instalar TODAS las dependencias del workspace
+# Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# build ordenado
-RUN pnpm --filter @repo/db build
-RUN pnpm --filter @repo/db exec prisma generate
-RUN pnpm --filter @repo/api build
+# Copy source code and build
+COPY --from=pruner /app/out/full/ .
+RUN pnpm turbo build --filter=@repo/api...
+RUN pnpm prune --prod
 
-# ======================
-# RUNNER
-# ======================
+# 3. Runner: Setup production image
 FROM base AS runner
 WORKDIR /app
 
-# usuario no root (Back4App-friendly)
-RUN addgroup -g 1001 -S nodejs \
-    && adduser -S nodejs -u 1001
-USER nodejs
+# Don't run as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
 
-# activar pnpm en runner
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+# Copy the entire app state from builder
+COPY --from=builder --chown=nextjs:nodejs /app .
 
-# copiar SOLO lo necesario para runtime
-COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-
-RUN pnpm install --prod --frozen-lockfile
+ENV PORT=4000
+ENV NODE_ENV=production
 
 EXPOSE 4000
-CMD ["node", "dist/main.js"]
+
+CMD ["node", "apps/api/dist/main.js"]
