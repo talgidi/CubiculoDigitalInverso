@@ -40,7 +40,12 @@ COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
-RUN pnpm install --prod --frozen-lockfile
+# Copy built node_modules from the builder stage to avoid resolving workspace:* packages
+# during a fresh install in the runner stage (this keeps the runtime identical to builder).
+COPY --from=builder /app/node_modules ./node_modules
+
+# If you still prefer to install in runner, you can uncomment the following line.
+# RUN pnpm install --prod --frozen-lockfile
 
 EXPOSE 4000
 CMD ["node", "dist/main.js"]
