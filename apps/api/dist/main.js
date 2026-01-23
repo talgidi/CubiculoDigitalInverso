@@ -104,7 +104,15 @@ const schema = createSchema({
     typeDefs,
     resolvers,
 });
-const yoga = createYoga({ schema });
+const yoga = createYoga({
+    schema,
+    cors: {
+        origin: process.env.FRONTEND_URL || '*',
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        methods: ['POST', 'GET', 'OPTIONS']
+    }
+});
 const server = createServer((req, res) => {
     if (req.url === '/health') {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
