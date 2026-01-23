@@ -1,6 +1,5 @@
 FROM node:18-alpine AS base
 RUN apk add --no-cache libc6-compat
-RUN apk add --no-cache python3 make g++
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # 1. Prune: Scope to @repo/api and its deps
@@ -23,7 +22,7 @@ RUN pnpm install
 
 # Copy source code and build
 COPY --from=pruner /app/out/full/ .
-RUN pnpm turbo build --filter=@repo/api...
+RUN pnpm turbo build
 RUN pnpm prune --prod
 
 # 3. Runner: Setup production image
