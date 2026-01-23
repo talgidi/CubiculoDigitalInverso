@@ -7,8 +7,10 @@ RUN apk add --no-cache libc6-compat
 FROM base AS builder
 WORKDIR /app
 
-# pnpm estable
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+# pnpm: instalar localmente en un prefijo escribible para evitar fallos de permisos
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME/node_modules/.bin:$PATH
+RUN npm install -g pnpm@10.28.1 --prefix $PNPM_HOME --no-fund --no-audit
 
 # copiar monorepo completo
 COPY . .
@@ -27,20 +29,20 @@ RUN pnpm --filter @repo/api build
 FROM base AS runner
 WORKDIR /app
 
+
+# copiar SOLO lo necesario para runtime (incluimos node_modules y PNPM_HOME)
+COPY --from=builder /app/apps/api/dist ./dist
+COPY --from=builder /app/apps/api/package.json ./package.json
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /pnpm /pnpm
+
 # usuario no root (Back4App-friendly)
 RUN addgroup -g 1001 -S nodejs \
     && adduser -S nodejs -u 1001
 USER nodejs
 
-# activar pnpm en runner
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
-
-# copiar SOLO lo necesario para runtime
-COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-
-RUN pnpm install --prod --frozen-lockfile
+# No ejecutar instalación en runtime; usamos los artefactos copiados del builder
 
 EXPOSE 4000
 CMD ["node", "dist/main.js"]
