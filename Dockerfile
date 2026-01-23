@@ -15,13 +15,13 @@ RUN npm install -g pnpm@10.28.1 --prefix $PNPM_HOME --no-fund --no-audit
 # copiar monorepo completo
 COPY . .
 
-# instalar TODAS las dependencias del workspace
-RUN pnpm install --frozen-lockfile
+# instalar TODAS las dependencias del workspace usando la ruta absoluta a pnpm
+RUN /pnpm/bin/pnpm install --frozen-lockfile
 
-# build ordenado
-RUN pnpm --filter @repo/db build
-RUN pnpm --filter @repo/db exec prisma generate
-RUN pnpm --filter @repo/api build
+# build ordenado (usar ruta absoluta para evitar problemas de PATH)
+RUN /pnpm/bin/pnpm --filter @repo/db build
+RUN /pnpm/bin/pnpm --filter @repo/db exec prisma generate
+RUN /pnpm/bin/pnpm --filter @repo/api build
 
 # ======================
 # RUNNER
