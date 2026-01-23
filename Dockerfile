@@ -1,44 +1,45 @@
 FROM node:18-alpine AS base
+WORKDIR /app
+
+# Required for Prisma on Alpine
 RUN apk add --no-cache libc6-compat
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# 1. Prune: Scope to @repo/api and its deps
-FROM base AS pruner
-WORKDIR /app
-COPY . .
-RUN npx turbo prune --scope=@repo/api --docker
+# Enable Corepack + fixed PNPM version
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 
-# 2. Builder: Install deps and build
+
+# =========================
+# Builder
+# =========================
 FROM base AS builder
-WORKDIR /app
-ENV NODE_ENV=development
 
-# Copy locked configuration
-COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+# Copy monorepo (context = root)
+COPY . .
 
-# Install dependencies
-RUN pnpm install
+# Install deps
+RUN pnpm install --frozen-lockfile
 
-# Copy source code and build
-COPY --from=pruner /app/out/full/ .
-RUN pnpm turbo build
-RUN pnpm prune --prod
+# Generate Prisma Client
+RUN pnpm --filter @repo/db exec prisma generate
 
-# 3. Runner: Setup production image
+# Build API only
+RUN pnpm --filter @repo/api build
+
+
+# =========================
+# Runner
+# =========================
 FROM base AS runner
-WORKDIR /app
 
-# Don't run as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
+# Non-root user
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nodejs
+USER nodejs
 
-# Copy the entire app state from builder
-COPY --from=builder --chown=nextjs:nodejs /app .
-
-ENV PORT=4000
-ENV NODE_ENV=production
+# Copy only what runtime needs
+COPY --from=builder /app/apps/api/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 4000
 
