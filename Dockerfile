@@ -12,6 +12,7 @@ RUN npx turbo prune --scope=@repo/api --docker
 # 2. Builder: Install deps and build
 FROM base AS builder
 WORKDIR /app
+ENV NODE_ENV=development
 
 # Copy locked configuration
 COPY --from=pruner /app/out/json/ .
