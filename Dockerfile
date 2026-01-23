@@ -32,6 +32,9 @@ RUN addgroup -g 1001 -S nodejs \
     && adduser -S nodejs -u 1001
 USER nodejs
 
+# activar pnpm en runner
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+
 # copiar SOLO lo necesario para runtime
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./package.json
