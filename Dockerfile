@@ -23,7 +23,7 @@ RUN /pnpm/bin/pnpm --filter @repo/db build
 RUN /pnpm/bin/pnpm --filter @repo/db exec prisma generate
 RUN /pnpm/bin/pnpm --filter @repo/api build
 # Ensure production deps for the api package are installed in builder (so we can copy them)
-RUN /pnpm/bin/pnpm --filter @repo/api install --prod --frozen-lockfile
+RUN CI=true /pnpm/bin/pnpm --filter @repo/api install --prod --frozen-lockfile
 
 # ======================
 # RUNNER
