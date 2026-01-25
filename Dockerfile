@@ -34,8 +34,10 @@ WORKDIR /app
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /pnpm /pnpm
+
+# Instalar dependencias de producción en runtime para asegurar paquetes faltantes
+RUN /pnpm/bin/pnpm install --prod --frozen-lockfile
 COPY --from=builder /app/packages/db ./packages/db
 
 # usuario no root (Back4App-friendly)
