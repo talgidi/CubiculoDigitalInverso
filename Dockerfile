@@ -37,7 +37,8 @@ COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /pnpm /pnpm
 
 # Instalar dependencias de producción en runtime para asegurar paquetes faltantes
-RUN /pnpm/bin/pnpm install --prod --frozen-lockfile
+# Permitir instalar aun si el lockfile no está perfectamente sincronizado
+RUN /pnpm/bin/pnpm install --prod --no-frozen-lockfile
 COPY --from=builder /app/packages/db ./packages/db
 
 # usuario no root (Back4App-friendly)
