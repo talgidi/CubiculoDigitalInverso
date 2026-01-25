@@ -36,6 +36,7 @@ COPY --from=builder /app/apps/api/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /pnpm /pnpm
+COPY --from=builder /app/packages/db ./packages/db
 
 # usuario no root (Back4App-friendly)
 RUN addgroup -g 1001 -S nodejs \
