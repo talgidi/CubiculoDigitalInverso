@@ -22,6 +22,8 @@ RUN /pnpm/bin/pnpm install --frozen-lockfile
 RUN /pnpm/bin/pnpm --filter @repo/db build
 RUN /pnpm/bin/pnpm --filter @repo/db exec prisma generate
 RUN /pnpm/bin/pnpm --filter @repo/api build
+# Ensure production deps for the api package are installed in builder (so we can copy them)
+RUN /pnpm/bin/pnpm --filter @repo/api install --prod --frozen-lockfile
 
 # ======================
 # RUNNER
@@ -35,7 +37,7 @@ COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /pnpm /pnpm
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/node_modules ./node_modules
 COPY --from=builder /app/packages/db ./packages/db
 
 # usuario no root (Back4App-friendly)
