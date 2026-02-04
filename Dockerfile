@@ -9,7 +9,8 @@ WORKDIR /app
 
 # pnpm: instalar localmente en un prefijo escribible para evitar fallos de permisos
 ENV PNPM_HOME=/pnpm
-ENV PATH=$PNPM_HOME/node_modules/.bin:$PATH
+# Ensure npm global bin and node_modules binaries are on PATH
+ENV PATH=$PNPM_HOME/bin:$PNPM_HOME/node_modules/.bin:$PATH
 RUN npm install -g pnpm@10.28.1 --prefix $PNPM_HOME --no-fund --no-audit
 
 # copiar monorepo completo
